@@ -1,14 +1,21 @@
+import 'reflect-metadata';
+import serverless from 'serverless-http';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import { AppModule } from '../../src/app.module';
+
+let cachedHandler: any;
 
 async function bootstrap() {
+  if (cachedHandler) return cachedHandler;
+
   const app = await NestFactory.create(AppModule);
 
+  // CORS allow Vercel + local via env CORS_ORIGIN (comma separated) or default
   const corsOrigins = process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
-    : ['http://localhost:5173', 'http://localhost:3000'];
+    : ['http://localhost:5173', 'http://localhost:3000', 'https://*.vercel.app'];
 
   app.enableCors({
     origin: (origin, cb) => {
@@ -20,9 +27,7 @@ async function bootstrap() {
         }
         return o === origin;
       });
-      // allow if origin not set (curl, serverless) or matched
-      if (!origin || allowed) cb(null, true);
-      else cb(new Error('Not allowed by CORS'), false);
+      cb(null, allowed);
     },
     credentials: true,
   });
@@ -48,9 +53,13 @@ async function bootstrap() {
   const doc = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, doc);
 
-  const port = process.env.PORT ?? 3000;
-  await app.listen(port);
-  console.log(`API running on http://localhost:${port}/api`);
-  console.log(`Docs running on http://localhost:${port}/api/docs`);
+  await app.init();
+  const expressApp = app.getHttpAdapter().getInstance();
+  cachedHandler = serverless(expressApp);
+  return cachedHandler;
 }
-bootstrap();
+
+export const handler = async (event: any, context: any) => {
+  const server = await bootstrap();
+  return server(event, context);
+};

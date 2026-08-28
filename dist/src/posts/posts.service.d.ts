@@ -14,12 +14,12 @@ export declare class PostsService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     })[]>;
     findAllAdmin(authorId: string): import(".prisma/client").Prisma.PrismaPromise<({
         author: {
@@ -31,12 +31,12 @@ export declare class PostsService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     })[]>;
     findBySlug(slug: string): Promise<{
         author: {
@@ -48,55 +48,55 @@ export declare class PostsService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     }>;
     findById(id: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     }>;
     create(dto: CreatePostDto, authorId: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     }>;
     update(id: string, dto: UpdatePostDto, userId: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     }>;
     remove(id: string, userId: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     }>;
 }

@@ -14,12 +14,12 @@ export declare class PostsController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     })[]>;
     findAllAdmin(req: any): import(".prisma/client").Prisma.PrismaPromise<({
         author: {
@@ -31,12 +31,12 @@ export declare class PostsController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     })[]>;
     findOne(slug: string): Promise<{
         author: {
@@ -48,44 +48,44 @@ export declare class PostsController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     }>;
     create(dto: CreatePostDto, req: any): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     }>;
     update(id: string, dto: UpdatePostDto, req: any): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     }>;
     remove(id: string, req: any): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        authorId: string;
         title: string;
         slug: string;
         excerpt: string | null;
         content: string;
         published: boolean;
+        authorId: string;
     }>;
 }
