@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Nest (inside nestjs/)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start:debug", "--", "--watch"],
+      "cwd": "${workspaceFolder}/nestjs",
+      "console": "integratedTerminal",
+      "restart": true,
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/nestjs/dist/**/*.js"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Nest (9229)",
+      "port": 9229,
+      "restart": true,
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/nestjs/dist/**/*.js"],
+      "cwd": "${workspaceFolder}/nestjs"
+    }
+  ]
+}

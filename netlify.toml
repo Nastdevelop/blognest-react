@@ -7,7 +7,14 @@
   directory = "netlify/functions"
   included_files = ["dist/**", "prisma/**", "node_modules/.prisma/**", "node_modules/@prisma/**"]
   node_bundler = "esbuild"
-  external_node_modules = ["@prisma/client", ".prisma", "bcrypt"]
+  external_node_modules = [
+    "@nestjs/microservices",
+    "@nestjs/websockets",
+    "class-transformer",
+    "@prisma/client",
+    ".prisma",
+    "bcrypt"
+  ]
 
 [build.environment]
   NODE_VERSION = "20"

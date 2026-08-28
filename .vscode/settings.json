@@ -1,0 +1,9 @@
+{
+  "debug.node.autoAttach": "off",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "files.exclude": {
+    "dist": false,
+    "node_modules": true
+  }
+}
