@@ -9,9 +9,24 @@ let cachedHandler: any;
 
 async function bootstrap() {
   if (cachedHandler) return cachedHandler;
+  // strip surrounding quotes if Netlify env was set with quotes
+  for (const k of ['DATABASE_URL', 'JWT_SECRET', 'JWT_EXPIRES_IN', 'CORS_ORIGIN']) {
+    if (process.env[k]?.startsWith('"') && process.env[k]?.endsWith('"')) {
+      process.env[k] = process.env[k]!.slice(1, -1);
+    }
+    if (process.env[k]?.startsWith("'") && process.env[k]?.endsWith("'")) {
+      process.env[k] = process.env[k]!.slice(1, -1);
+    }
+  }
   console.log('[netlify] bootstrap start, env check DATABASE_URL exists:', !!process.env.DATABASE_URL);
+  console.log('[netlify] env JWT_SECRET exists:', !!process.env.JWT_SECRET, 'CORS_ORIGIN:', process.env.CORS_ORIGIN || 'default');
   if (!process.env.DATABASE_URL) {
-    console.error('[netlify] DATABASE_URL missing!');
+    console.error('[netlify] DATABASE_URL missing! Set env in Netlify dashboard scope All (Build+Functions+Runtime) without quotes');
+    throw new Error('DATABASE_URL missing - set env var in Netlify without quotes');
+  }
+  if (!process.env.DATABASE_URL.startsWith('postgresql://') && !process.env.DATABASE_URL.startsWith('postgres://')) {
+    console.error('[netlify] DATABASE_URL invalid prefix:', process.env.DATABASE_URL.substring(0, 30));
+    throw new Error('DATABASE_URL must start with postgresql://');
   }
   const app = await NestFactory.create(AppModule);
 
