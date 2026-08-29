@@ -1,11 +1,11 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private users: UsersService, private jwt: JwtService) {}
+  constructor(@Inject(UsersService) private users: UsersService, @Inject(JwtService) private jwt: JwtService) {}
 
   async register(email: string, password: string, name?: string) {
     const exists = await this.users.findByEmail(email);

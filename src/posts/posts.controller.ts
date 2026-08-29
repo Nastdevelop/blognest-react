@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Param, Body, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, UseGuards, Req, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -10,7 +10,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 @ApiTags('posts')
 @Controller('posts')
 export class PostsController {
-  constructor(private posts: PostsService) {}
+  constructor(@Inject(PostsService) private posts: PostsService) {}
 
   @Get()
   @ApiOperation({ summary: 'Public, list published posts' })

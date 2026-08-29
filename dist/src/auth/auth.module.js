@@ -21,13 +21,19 @@ exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            config_1.ConfigModule,
             users_module_1.UsersModule,
             passport_1.PassportModule,
             jwt_1.JwtModule.registerAsync({
+                imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
                 useFactory: (config) => ({
-                    secret: config.get('JWT_SECRET') || 'belajar-super-secret-jwt-2025-change-in-prod',
-                    signOptions: { expiresIn: config.get('JWT_EXPIRES_IN') || '7d' },
+                    secret: config?.get('JWT_SECRET') ||
+                        process.env.JWT_SECRET ||
+                        'belajar-super-secret-jwt-2025-change-in-prod',
+                    signOptions: {
+                        expiresIn: config?.get('JWT_EXPIRES_IN') || process.env.JWT_EXPIRES_IN || '7d',
+                    },
                 }),
             }),
         ],
