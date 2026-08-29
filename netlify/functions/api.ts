@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import serverless from 'serverless-http';
+import express from 'express';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -29,6 +30,26 @@ async function bootstrap() {
     throw new Error('DATABASE_URL must start with postgresql://');
   }
   const app = await NestFactory.create(AppModule);
+  // ensure body parser for serverless-http - must be before init and also handle raw string body
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.use(express.json({ limit: '1mb' }));
+  expressApp.use(express.urlencoded({ extended: true }));
+  // handle Buffer body from serverless-http
+  expressApp.use((req: any, _res: any, next: any) => {
+    if (Buffer.isBuffer(req.body) && req.headers['content-type']?.includes('application/json')) {
+      try {
+        req.body = JSON.parse(req.body.toString());
+      } catch {}
+    }
+    next();
+  });
+  // debug log body
+  expressApp.use((req: any, _res: any, next: any) => {
+    console.log('[netlify] req', req.method, req.url, 'headers', req.headers, 'body', req.body);
+    next();
+  });
+  app.use(express.json({ limit: '1mb' }));
+  app.use(express.urlencoded({ extended: true }));
 
   // CORS allow Vercel + local via env CORS_ORIGIN (comma separated) or default
   const corsOrigins = process.env.CORS_ORIGIN
@@ -72,7 +93,6 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, doc);
 
   await app.init();
-  const expressApp = app.getHttpAdapter().getInstance();
   cachedHandler = serverless(expressApp);
   return cachedHandler;
 }
