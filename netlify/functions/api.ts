@@ -9,7 +9,10 @@ let cachedHandler: any;
 
 async function bootstrap() {
   if (cachedHandler) return cachedHandler;
-
+  console.log('[netlify] bootstrap start, env check DATABASE_URL exists:', !!process.env.DATABASE_URL);
+  if (!process.env.DATABASE_URL) {
+    console.error('[netlify] DATABASE_URL missing!');
+  }
   const app = await NestFactory.create(AppModule);
 
   // CORS allow Vercel + local via env CORS_ORIGIN (comma separated) or default
@@ -60,6 +63,15 @@ async function bootstrap() {
 }
 
 export const handler = async (event: any, context: any) => {
-  const server = await bootstrap();
-  return server(event, context);
+  try {
+    const server = await bootstrap();
+    return await server(event, context);
+  } catch (err) {
+    console.error('[netlify] handler error', err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: 'Function error', error: String(err) }),
+      headers: { 'Content-Type': 'application/json' },
+    };
+  }
 };
